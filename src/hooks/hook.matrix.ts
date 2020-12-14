@@ -17,7 +17,7 @@ export const useMatrixListener = () => {
     console.log(process.env.SQS_URL);
 
     const consumer = Consumer.create({
-      queueUrl: process.env.SQS_URL,
+      queueUrl: 'https://sqs.us-east-1.amazonaws.com/911911702214/frontend',
       sqs: sqs,
       handleMessage: async (message) => {
         const msg = JSON.parse(JSON.parse(JSON.stringify(message)).Body);
@@ -73,7 +73,7 @@ export const useMatrixGeneratorTrigger = () => {
   const onSubmit = (input: MatrixInput) => () => {
     sns
       .publish({
-        TopicArn: process.env.SNS_TOPIC_ARN,
+        TopicArn: 'arn:aws:sns:us-east-1:911911702214:MatrixGen',
         Message: `{"rows": ${input.rows}, "columns": ${input.columns}}`,
       })
       .promise();
