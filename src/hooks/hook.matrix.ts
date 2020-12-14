@@ -14,8 +14,10 @@ export const useMatrixListener = () => {
       region: process.env.REGION,
     });
 
+    console.log(process.env.SQS_URL);
+
     const consumer = Consumer.create({
-      queueUrl: process.env.SQS_URL,
+      queueUrl: 'https://sqs.us-east-1.amazonaws.com/911911702214/frontend',
       sqs: sqs,
       handleMessage: async (message) => {
         const msg = JSON.parse(JSON.parse(JSON.stringify(message)).Body);
