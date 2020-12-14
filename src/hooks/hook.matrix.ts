@@ -8,9 +8,9 @@ export const useMatrixListener = () => {
 
   useEffect(() => {
     const sqs = new AWS.SQS({
-      accessKeyId: process.env.access_key_id,
-      secretAccessKey: process.env.secret_access_key,
-      sessionToken: process.env.session_token,
+      accessKeyId: process.env.ACCESS_KEY_ID,
+      secretAccessKey: process.env.SECRECT_KEY_ID,
+      sessionToken: process.env.SESSION_TOKEN,
       region: process.env.REGION,
     });
 
@@ -63,9 +63,9 @@ export const useMatrixInput = () => {
 export const useMatrixGeneratorTrigger = () => {
   const sns = useMemo(() => {
     return new AWS.SNS({
-      accessKeyId: process.env.access_key_id,
-      secretAccessKey: process.env.secret_access_key,
-      sessionToken: process.env.session_token,
+      accessKeyId: process.env.ACCESS_KEY_ID,
+      secretAccessKey: process.env.SECRECT_KEY_ID,
+      sessionToken: process.env.SESSION_TOKEN,
       region: process.env.REGION,
     });
   }, []);
