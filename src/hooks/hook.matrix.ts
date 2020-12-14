@@ -23,9 +23,9 @@ export const useMatrixListener = () => {
         const messageInfo = JSON.parse(msg.Message);
 
         if (messageInfo.type === 'new matrix generated') {
-          const newMatrices = [...matrices];
+          const newMatrices = matrices;
 
-          const matrix = messageInfo.matirx;
+          const matrix = messageInfo.matrix;
           newMatrices.push({
             id: matrix.id,
             rows: matrix.rows,
