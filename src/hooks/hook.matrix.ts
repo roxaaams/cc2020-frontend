@@ -8,16 +8,16 @@ export const useMatrixListener = () => {
 
   useEffect(() => {
     const sqs = new AWS.SQS({
-      accessKeyId: process.env.ACCESS_KEY_ID,
-      secretAccessKey: process.env.SECRECT_KEY_ID,
-      sessionToken: process.env.SESSION_TOKEN,
-      region: process.env.REGION,
+      accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+      secretAccessKey: process.env.REACT_APP_SECRECT_KEY_ID,
+      sessionToken: process.env.REACT_APP_SESSION_TOKEN,
+      region: process.env.REACT_APP_REGION,
     });
 
     console.log(process.env);
 
     const consumer = Consumer.create({
-      queueUrl: 'https://sqs.us-east-1.amazonaws.com/911911702214/frontend',
+      queueUrl: process.env.REACT_APP_SQS_URL,
       sqs: sqs,
       handleMessage: async (message) => {
         const msg = JSON.parse(JSON.parse(JSON.stringify(message)).Body);
@@ -63,17 +63,17 @@ export const useMatrixInput = () => {
 export const useMatrixGeneratorTrigger = () => {
   const sns = useMemo(() => {
     return new AWS.SNS({
-      accessKeyId: process.env.ACCESS_KEY_ID,
-      secretAccessKey: process.env.SECRECT_KEY_ID,
-      sessionToken: process.env.SESSION_TOKEN,
-      region: process.env.REGION,
+      accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
+      secretAccessKey: process.env.REACT_APP_SECRECT_KEY_ID,
+      sessionToken: process.env.REACT_APP_SESSION_TOKEN,
+      region: process.env.REACT_APP_REGION,
     });
   }, []);
 
   const onSubmit = (input: MatrixInput) => () => {
     sns
       .publish({
-        TopicArn: 'arn:aws:sns:us-east-1:911911702214:MatrixGen',
+        TopicArn: process.env.REACT_APP_TOPIC_ARN,
         Message: `{"rows": ${input.rows}, "columns": ${input.columns}}`,
       })
       .promise();
