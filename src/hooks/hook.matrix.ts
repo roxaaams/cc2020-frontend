@@ -2,7 +2,6 @@ import { useEffect, useState, ChangeEvent, useMemo } from 'react';
 import { Matrix, MatrixInput } from '../types/type.matrix';
 import * as AWS from 'aws-sdk';
 import { Consumer } from 'sqs-consumer';
-import config from '../configs/config.aws.json';
 
 export const useMatrixListener = () => {
   const [matrices, setMatrices] = useState<Matrix[]>([]);
@@ -38,7 +37,7 @@ export const useMatrixListener = () => {
     });
 
     consumer.start();
-  }, [config]);
+  }, []);
 
   return matrices;
 };
@@ -62,12 +61,12 @@ export const useMatrixInput = () => {
 export const useMatrixGeneratorTrigger = () => {
   const sns = useMemo(() => {
     return new AWS.SNS({
-      accessKeyId: config.AWS_ACCESS_KEY,
-      secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
-      sessionToken: config.AWS_SESSION_TOKEN,
-      region: config.REGION,
+      accessKeyId: process.env.access_key_id,
+      secretAccessKey: process.env.secret_access_key,
+      sessionToken: process.env.session_token,
+      region: process.env.REGION,
     });
-  }, [config]);
+  }, []);
 
   const onSubmit = (input: MatrixInput) => () => {
     sns
