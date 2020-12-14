@@ -9,12 +9,10 @@ export const useMatrixListener = () => {
   useEffect(() => {
     const sqs = new AWS.SQS({
       accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
-      secretAccessKey: process.env.REACT_APP_SECRECT_KEY_ID,
+      secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
       sessionToken: process.env.REACT_APP_SESSION_TOKEN,
       region: process.env.REACT_APP_REGION,
     });
-
-    console.log(process.env);
 
     const consumer = Consumer.create({
       queueUrl: process.env.REACT_APP_SQS_URL,
@@ -64,7 +62,7 @@ export const useMatrixGeneratorTrigger = () => {
   const sns = useMemo(() => {
     return new AWS.SNS({
       accessKeyId: process.env.REACT_APP_ACCESS_KEY_ID,
-      secretAccessKey: process.env.REACT_APP_SECRECT_KEY_ID,
+      secretAccessKey: process.env.REACT_APP_SECRET_ACCESS_KEY,
       sessionToken: process.env.REACT_APP_SESSION_TOKEN,
       region: process.env.REACT_APP_REGION,
     });
