@@ -9,14 +9,14 @@ export const useMatrixListener = () => {
 
   useEffect(() => {
     const sqs = new AWS.SQS({
-      accessKeyId: config.AWS_ACCESS_KEY,
-      secretAccessKey: config.AWS_SECRET_ACCESS_KEY,
-      sessionToken: config.AWS_SESSION_TOKEN,
-      region: config.REGION,
+      accessKeyId: process.env.access_key_id,
+      secretAccessKey: process.env.secret_access_key,
+      sessionToken: process.env.session_token,
+      region: process.env.REGION,
     });
 
     const consumer = Consumer.create({
-      queueUrl: config.SQS_URL,
+      queueUrl: process.env.SQS_URL,
       sqs: sqs,
       handleMessage: async (message) => {
         const msg = JSON.parse(JSON.parse(JSON.stringify(message)).Body);
@@ -72,7 +72,7 @@ export const useMatrixGeneratorTrigger = () => {
   const onSubmit = (input: MatrixInput) => () => {
     sns
       .publish({
-        TopicArn: config.SNS_TOPIC_ARN,
+        TopicArn: process.env.SNS_TOPIC_ARN,
         Message: `{"rows": ${input.rows}, "columns": ${input.columns}}`,
       })
       .promise();
