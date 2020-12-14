@@ -21,6 +21,10 @@ import {
   useMatrixInput,
   useMatrixListener,
 } from './hooks/hook.matrix';
+import {
+  useMatrixCalculationTrigger,
+  useResultListener,
+} from './hooks/hook.master';
 
 const StyledContainer = styled(Container)`
   display: flex;
@@ -50,11 +54,19 @@ const App: FC = () => {
   };
 
   const availableMatrices = useMatrixListener();
+  const onTrigger = useMatrixCalculationTrigger();
+  useResultListener();
 
   useEffect(() => {
     if (availableMatrices.length > 0) {
       console.log('new matrices available');
       console.log(availableMatrices);
+    }
+    if (availableMatrices.length === 2) {
+      onTrigger({
+        multiplicand: { id: availableMatrices[0].id },
+        multiplier: { id: availableMatrices[1].id },
+      });
     }
   }, [availableMatrices]);
 
