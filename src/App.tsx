@@ -7,24 +7,21 @@ import {
   DialogActions,
   DialogContent,
   Divider,
-  Drawer,
   TextField,
   Typography,
+  LinearProgress,
 } from '@material-ui/core';
 import styled from 'styled-components';
 import { NavBar } from './components/NavBar';
-import { SettingsControls } from './components/Settings';
-import { useMatrices } from './hooks/matrices';
-import { MatrixView } from './components/Matrix';
 import {
   useMatrixGeneratorTrigger,
   useMatrixInput,
   useMatrixListener,
 } from './hooks/hook.matrix';
-import {
-  useMatrixCalculationTrigger,
-  useResultListener,
-} from './hooks/hook.master';
+import { useMatrixCalculationTrigger } from './hooks/hook.master';
+import SelectionCard from './components/SelectionCard';
+import { Calculation, Matrix } from './types/type.matrix';
+import SelectionDrawer from './components/SelectionDrawer';
 
 const StyledContainer = styled(Container)`
   display: flex;
@@ -39,43 +36,83 @@ const StyledContainer = styled(Container)`
 `;
 
 const App: FC = () => {
-  const [drawerActive, setDrawerActive] = useState(false);
-  const open = useCallback(() => {
-    setDrawerActive(true);
-  }, [setDrawerActive]);
-  const close = useCallback(() => {
-    setDrawerActive(false);
-  }, [setDrawerActive]);
-  const { A, B } = useMatrices();
+  const [generated, setGenerated] = useState<number>(0);
+  const [firstMatrix, setFirstMatrix] = useState<Matrix | undefined>();
+  const [secondMatrix, setSecondMatrix] = useState<Matrix | undefined>();
+  const [calculationRunning, setCalculationRunning] = useState<boolean>(true);
+  const [currentCalculation, setCurrentCalculation] = useState<Calculation>();
+
+  const {
+    availableMatrices,
+    resultMatrices,
+    calculationCache,
+  } = useMatrixListener();
+  const onTrigger = useMatrixCalculationTrigger();
+
+  const resetSelection = () => {
+    setFirstMatrix(undefined);
+    setSecondMatrix(undefined);
+  };
 
   const [openMatrixGen, setOpenMatrixGen] = useState<boolean>(false);
+  const [openMatrixSelection, setOpenMatrixSelection] = useState<boolean>(
+    false
+  );
+
+  const selectMatrix = (matrix: Matrix) => {
+    if (firstMatrix && !secondMatrix) {
+      setSecondMatrix(matrix);
+    } else if (firstMatrix && secondMatrix) {
+      setFirstMatrix(matrix);
+    } else {
+      setFirstMatrix(matrix);
+    }
+  };
+
+  const startCalculation = () => {
+    onTrigger({
+      multiplicand: { id: firstMatrix!.id },
+      multiplier: { id: secondMatrix!.id },
+    })();
+    setCurrentCalculation({
+      multiplicand_matrix_id: firstMatrix!.id,
+      multiplier_matrix_id: secondMatrix!.id,
+      totalCalculations: firstMatrix!.rows * secondMatrix!.columns,
+    });
+  };
+
   const closeMatrixGen = () => {
     setOpenMatrixGen(false);
   };
 
-  const availableMatrices = useMatrixListener();
-  const onTrigger = useMatrixCalculationTrigger();
-  useResultListener();
-
   useEffect(() => {
-    if (availableMatrices.length > 0) {
-      console.log('new matrices available');
-      console.log(availableMatrices);
+    if (resultMatrices) {
+      for (let i = 0; i < resultMatrices.length; i++) {
+        if (
+          resultMatrices[i].multiplier_matrix_id ===
+            currentCalculation?.multiplier_matrix_id &&
+          resultMatrices[i].multiplier_matrix_id ===
+            currentCalculation?.multiplier_matrix_id
+        ) {
+          let newCalc = { ...currentCalculation };
+          newCalc.result_matrix_id = resultMatrices[i].result_matrix_id;
+          setCurrentCalculation(newCalc);
+          return;
+        }
+      }
     }
-    if (availableMatrices.length === 2) {
-      onTrigger({
-        multiplicand: { id: availableMatrices[0].id },
-        multiplier: { id: availableMatrices[1].id },
-      });
-    }
-  }, [availableMatrices]);
+  }, [resultMatrices]);
 
   return (
     <>
-      <NavBar openDrawer={open} />
-      <Drawer anchor="left" open={drawerActive} onClose={close}>
-        <SettingsControls closeDrawer={close} />
-      </Drawer>
+      <NavBar
+        openDrawer={() => {
+          setOpenMatrixSelection(true);
+        }}
+        openGenModal={() => {
+          setOpenMatrixGen(true);
+        }}
+      />
       <StyledContainer>
         <Box
           style={{
@@ -86,32 +123,76 @@ const App: FC = () => {
             alignItems: 'center',
           }}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              setOpenMatrixGen(true);
-            }}
-          >
-            Generate a Matrix
-          </Button>
-
-          {availableMatrices.length > 0 &&
-            availableMatrices.map((matrix) => (
-              <Typography>{`id: ${matrix.id}, rows: ${matrix.rows}, columns: ${matrix.columns}`}</Typography>
-            ))}
-
-          {!(A && B) ? (
-            <Typography>Generate the matrices first!</Typography>
-          ) : (
-            <>
-              <MatrixView title="First Matrix (A)" matrix={A!} />
-              <MatrixView title="Second Matrix (B)" matrix={B!} />
-            </>
+          <SelectionCard
+            firstMatrix={firstMatrix}
+            secondMatrix={secondMatrix}
+            onReset={resetSelection}
+            onTriggerCalc={startCalculation}
+          />
+          {currentCalculation && (
+            <Box
+              style={{
+                marginTop: '20px',
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Box style={{ width: '95%' }}>
+                <LinearProgress
+                  variant="determinate"
+                  value={
+                    currentCalculation?.result_matrix_id
+                      ? ((calculationCache.get(
+                          currentCalculation?.result_matrix_id
+                        )
+                          ? Array.from(
+                              calculationCache
+                                .get(currentCalculation?.result_matrix_id)!
+                                .keys()
+                            ).length
+                          : 0) /
+                          currentCalculation.totalCalculations) *
+                        100
+                      : 0
+                  }
+                />
+              </Box>
+              <Typography>{`${
+                currentCalculation?.result_matrix_id
+                  ? ((calculationCache.get(currentCalculation?.result_matrix_id)
+                      ? Array.from(
+                          calculationCache
+                            .get(currentCalculation?.result_matrix_id)!
+                            .keys()
+                        ).length
+                      : 0) /
+                      currentCalculation.totalCalculations) *
+                    100
+                  : 0
+              }%`}</Typography>
+            </Box>
           )}
         </Box>
       </StyledContainer>
-      <MatrixGenModal open={openMatrixGen} close={closeMatrixGen} />
+      <MatrixGenModal
+        open={openMatrixGen}
+        close={closeMatrixGen}
+        addLoading={() => {
+          setGenerated((curr) => curr + 1);
+        }}
+      />
+      <SelectionDrawer
+        matrices={availableMatrices || []}
+        loading={generated - availableMatrices.length}
+        isOpen={openMatrixSelection}
+        onSelect={selectMatrix}
+        onClose={() => {
+          setOpenMatrixSelection(false);
+        }}
+      />
     </>
   );
 };
@@ -119,9 +200,11 @@ const App: FC = () => {
 const MatrixGenModal = ({
   open,
   close,
+  addLoading,
 }: {
   open: boolean;
   close: () => void;
+  addLoading: () => void;
 }) => {
   const { values, onInput, resetInput } = useMatrixInput();
   const onSubmit = useMatrixGeneratorTrigger();
@@ -182,6 +265,7 @@ const MatrixGenModal = ({
                 onSubmit(values)();
                 resetInput();
                 close();
+                addLoading();
               }}
             >
               Generate
