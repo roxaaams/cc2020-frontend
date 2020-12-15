@@ -39,8 +39,9 @@ const App: FC = () => {
   const [generated, setGenerated] = useState<number>(0);
   const [firstMatrix, setFirstMatrix] = useState<Matrix | undefined>();
   const [secondMatrix, setSecondMatrix] = useState<Matrix | undefined>();
-  const [calculationRunning, setCalculationRunning] = useState<boolean>(true);
-  const [currentCalculation, setCurrentCalculation] = useState<Calculation>();
+  const [currentCalculation, setCurrentCalculation] = useState<
+    Calculation | undefined
+  >();
 
   const {
     availableMatrices,
@@ -52,6 +53,7 @@ const App: FC = () => {
   const resetSelection = () => {
     setFirstMatrix(undefined);
     setSecondMatrix(undefined);
+    setCurrentCalculation(undefined);
   };
 
   const [openMatrixGen, setOpenMatrixGen] = useState<boolean>(false);
