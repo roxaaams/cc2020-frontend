@@ -21,56 +21,43 @@ const FlexContainer = styled(Container)`
 `;
 
 export const NavBar: FC<{
-  openDrawer: () => void,
-}> = ({
-  openDrawer,
-}) => {
+  openDrawer: () => void;
+  openGenModal: () => void;
+}> = ({ openDrawer, openGenModal }) => {
   const { isMobile } = useMedia();
   const generate = useGenerateMatrices();
   return (
     <AppBar position="static">
       <Toolbar>
         <FlexContainer>
-          {!isMobile
-            ? (
-              <Button
-                variant="contained"
-                color="primary"
-                disableElevation
-                onClick={openDrawer}
-              >
-                Settings
-              </Button>
-
-            )
-            : (
-              <IconButton
-                style={{ color: 'white' }}
-                onClick={openDrawer}
-              >
-                <MenuOpenIcon />
-              </IconButton>
-
-            )}
-          {!isMobile
-            ? (
-              <Button
-                variant="contained"
-                color="primary"
-                disableElevation
-                onClick={generate}
-              >
-                Generate
-              </Button>
-            )
-            : (
-              <IconButton
-                style={{ color: 'white' }}
-                onClick={generate}
-              >
-                <PlayArrowIcon />
-              </IconButton>
-            )}
+          {!isMobile ? (
+            <Button
+              variant="text"
+              color="inherit"
+              disableElevation
+              onClick={openDrawer}
+            >
+              Select a Matrix
+            </Button>
+          ) : (
+            <IconButton style={{ color: 'white' }} onClick={openDrawer}>
+              <MenuOpenIcon />
+            </IconButton>
+          )}
+          {!isMobile ? (
+            <Button
+              variant="text"
+              color="inherit"
+              disableElevation
+              onClick={openGenModal}
+            >
+              Generate a Matrix
+            </Button>
+          ) : (
+            <IconButton style={{ color: 'white' }} onClick={generate}>
+              <PlayArrowIcon />
+            </IconButton>
+          )}
         </FlexContainer>
       </Toolbar>
     </AppBar>
