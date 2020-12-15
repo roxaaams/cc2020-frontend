@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.1",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.57",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -48,7 +49,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "st": "REACT_APP_MASTER_SNS_TOPIC_ARN=arn:aws:sns:us-east-1:625171071509:matrixmultiplication REACT_APP_ACCESS_KEY_ID=ASIAZDDYZQIKXE5TGX4Q REACT_APP_SECRET_ACCESS_KEY=QIYkfG915PKK7KyOj1typ4W55izzug8UA6nxq10S REACT_APP_SESSION_TOKEN=FwoGZXIvYXdzEGwaDLRCoa1L9WS93U381yLLARsSwtAaj1wPBCY3wtZ6CsWeHAnU739bNI5OvxHBJK3n9gxXCtoL5I8Zunl59IW04eB9bppGhOpr1/xo2SD3RSrF9WBgx1MaTcubHiua8L3AEqUX0S8k9FkqMtWMimpmV0BozSATNQ0I1fTiBk9vmjH+qN8uMrtl15djRgxd+aykL7w080HwS9nHQVusdGoAEt/vRGeyUnKPNpikpYzucEZYYeATtRjsT9SWWlAo2HLOFGcXDLJsxUrTZdyYKCB21SuuFq9YL2khKjBmKMqA5P4FMi1UtgoQpNpTHXtf+ULvQv3pqlNzr+LC5xoO1nhwWp/LPbZjXVYKAJGdRPkqCt8= REACT_APP_REGION=us-east-1 REACT_APP_SQS_URL=https://sqs.us-east-1.amazonaws.com/625171071509/results REACT_APP_TOPIC_ARN=arn:aws:sns:us-east-1:625171071509:matrixgenerator npm start"
   },
   "eslintConfig": {
     "extends": "react-app"
