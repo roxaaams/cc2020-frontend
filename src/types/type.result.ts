@@ -1,9 +1,11 @@
-import { MessageType } from './type.message';
-
 export interface EntryResult {
-  type: MessageType.EntryResult;
-  id: string;
   row_index: number;
   column_index: number;
-  result: number;
+  value: number;
+}
+
+export interface ResultMatrix {
+  result_matrix_id: string;
+  multiplicand_matrix_id: string;
+  multiplier_matrix_id: string;
 }
