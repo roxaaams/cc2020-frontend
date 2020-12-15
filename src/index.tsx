@@ -4,23 +4,14 @@ import './index.css';
 import 'typeface-roboto';
 
 import App from './App';
-import { MediaProvider } from './hooks/media';
-import { SettingsProvider } from './hooks/settings';
 
 import reportWebVitals from './reportWebVitals';
-import { MatricesProvider } from './hooks/matrices';
 
 ReactDOM.render(
   <React.StrictMode>
-    <MediaProvider>
-      <SettingsProvider>
-        <MatricesProvider>
-          <App />
-        </MatricesProvider>
-      </SettingsProvider>
-    </MediaProvider>
+    <App />
   </React.StrictMode>,
-  document.getElementById('root'),
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

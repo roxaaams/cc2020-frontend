@@ -130,50 +130,57 @@ const App: FC = () => {
             onTriggerCalc={startCalculation}
           />
           {currentCalculation && (
-            <Box
-              style={{
-                marginTop: '20px',
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-            >
-              <Box style={{ width: '95%' }}>
-                <LinearProgress
-                  variant="determinate"
-                  value={
-                    currentCalculation?.result_matrix_id
-                      ? ((calculationCache.get(
-                          currentCalculation?.result_matrix_id
-                        )
-                          ? Array.from(
-                              calculationCache
-                                .get(currentCalculation?.result_matrix_id)!
-                                .keys()
-                            ).length
-                          : 0) /
-                          currentCalculation.totalCalculations) *
-                        100
-                      : 0
-                  }
-                />
+            <>
+              <Typography variant="h2" style={{ marginTop: '20px' }}>
+                Calculation
+              </Typography>
+              <Box
+                style={{
+                  marginTop: '20px',
+                  width: '100%',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <Box style={{ width: '95%' }}>
+                  <LinearProgress
+                    variant="determinate"
+                    value={
+                      currentCalculation?.result_matrix_id
+                        ? ((calculationCache.get(
+                            currentCalculation?.result_matrix_id
+                          )
+                            ? Array.from(
+                                calculationCache
+                                  .get(currentCalculation?.result_matrix_id)!
+                                  .keys()
+                              ).length
+                            : 0) /
+                            currentCalculation.totalCalculations) *
+                          100
+                        : 0
+                    }
+                  />
+                </Box>
+                <Typography>{`${
+                  currentCalculation?.result_matrix_id
+                    ? ((calculationCache.get(
+                        currentCalculation?.result_matrix_id
+                      )
+                        ? Array.from(
+                            calculationCache
+                              .get(currentCalculation?.result_matrix_id)!
+                              .keys()
+                          ).length
+                        : 0) /
+                        currentCalculation.totalCalculations) *
+                      100
+                    : 0
+                }%`}</Typography>
               </Box>
-              <Typography>{`${
-                currentCalculation?.result_matrix_id
-                  ? ((calculationCache.get(currentCalculation?.result_matrix_id)
-                      ? Array.from(
-                          calculationCache
-                            .get(currentCalculation?.result_matrix_id)!
-                            .keys()
-                        ).length
-                      : 0) /
-                      currentCalculation.totalCalculations) *
-                    100
-                  : 0
-              }%`}</Typography>
-            </Box>
+            </>
           )}
         </Box>
       </StyledContainer>
